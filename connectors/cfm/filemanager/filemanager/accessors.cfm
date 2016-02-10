@@ -27,6 +27,14 @@
 
 <cffunction name="$getRoot" access="private" output="false" returntype="string">
 	<cfargument name="baseTemplatePath" type="string" required="false" default="#GetDirectoryFromPath(GetBaseTemplatePath())#" />
-	<cfargument name="cgiTemplatePath" type="string" required="false" default="#GetDirectoryFromPath(cgi.path_info)#" />
-	<cfreturn Replace(arguments.baseTemplatePath, Replace(arguments.cgiTemplatePath, "/", "\", "all"), "", "all") />
+	<cfargument name="cgiTemplatePath" type="string" required="false" default="#GetDirectoryFromPath(cgi.script_name)#" />
+	<cfset var result = ''/>
+	<cfif structKeyExists(server,"railo")>
+		<cfset result = expandPath("/") />
+		<cfset result = left(result,len(result)-1)/>
+	<cfelse>
+		<cfset result = Replace(arguments.baseTemplatePath, Replace(arguments.cgiTemplatePath, "/", "\", "all"), "", "all") />
+	</cfif>
+	<cfreturn result/>
 </cffunction>
+
